@@ -18,7 +18,7 @@ exports.createProduct = async(req , res)=>{
         }
         
         const imagesList = req.files 
-            ? req.files.map(file => `https://closet-back-end.vercel.app/uploads/${file.filename}`)
+            ? req.files.map(file => `data:${file.mimetype};base64,${file.buffer.toString('base64')}`)
             : [];
 
  
@@ -89,7 +89,7 @@ exports.updateProduct = async(req , res)=>{
         const{title,description,price,stock,categoryId , sizes, colors} = req.body;
         let updatedImages ;
         if (req.files && req.files.length > 0) {
-            updatedImages = req.files.map(file => `https://closet-back-end.vercel.app/uploads/${file.filename}`);
+            updatedImages = req.files.map(file => `data:${file.mimetype};base64,${file.buffer.toString('base64')}`);
         }
 
         const updatedProduct = await prisma.product.update({

@@ -89,7 +89,7 @@ exports.updateProduct = async(req , res)=>{
         const{title,description,price,stock,categoryId , sizes, colors} = req.body;
         let updatedImages ;
         if (req.files && req.files.length > 0) {
-            updatedImages = req.files.map(file => `http://localhost:5010/uploads/${file.filename}`);
+            updatedImages = req.files.map(file => `https://closet-back-end.vercel.app/uploads/${file.filename}`);
         }
 
         const updatedProduct = await prisma.product.update({

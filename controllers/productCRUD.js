@@ -18,7 +18,7 @@ exports.createProduct = async(req , res)=>{
         }
         
         const imagesList = req.files 
-            ? req.files.map(file => `http://localhost:5010/uploads/${file.filename}`)
+            ? req.files.map(file => `https://closet-back-end.vercel.app/uploads/${file.filename}`)
             : [];
 
  

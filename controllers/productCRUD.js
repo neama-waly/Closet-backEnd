@@ -103,10 +103,15 @@ exports.getProductById = async(req,res)=>{
     try{
         const {id} = req.params;
         const cacheKey = `products:id:${id}`;
-        const cachedProduct = await redisClient.get(cacheKey);
-        if (cachedProduct) {
-            return res.json(JSON.parse(cachedProduct));
+        try{
+            const cachedProduct = await redisClient.get(cacheKey);
+            if (cachedProduct) {
+                return res.json(JSON.parse(cachedProduct));
+        }     
+        }catch (redisError) {
+            console.error("Redis error, falling back to DB:", redisError.message);
         }
+
 
         const product = await prisma.product.findUnique({
             where : {id : id},
@@ -115,8 +120,12 @@ exports.getProductById = async(req,res)=>{
         if(!product){
             return res.status(404).json({message : "PRODUCT NOT FOUND ",error})
         }
+        try{
+            await redisClient.setEx(cacheKey, 3600, JSON.stringify(product));  
+        }catch (redisError) {
+            console.error("Failed to set Redis cache:", redisError.message);
+        }
 
-        await redisClient.setEx(cacheKey, 3600, JSON.stringify(product));
         res.json(product);
 
     }catch(error){

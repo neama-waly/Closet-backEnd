@@ -64,9 +64,13 @@ exports.getProducts = async(req,res)=>{
         const {categoryId , search }=req.query;
 
         const cacheKey = `products:cat=${categoryId || 'all'}:search=${search || 'none'}`;
-        const cachedProducts = await redisClient.get(cacheKey);
-        if (cachedProducts) {
-            return res.json(JSON.parse(cachedProducts));
+       try {
+            const cachedProducts = await redisClient.get(cacheKey);
+            if (cachedProducts) {
+                return res.json(JSON.parse(cachedProducts));
+            }
+        } catch (redisError) {
+            console.error("Redis error, falling back to DB:", redisError.message);
         }
 
         const where = {};
@@ -83,7 +87,11 @@ exports.getProducts = async(req,res)=>{
             orderBy : {createdAt : "desc" }
         });
 
-        await redisClient.setEx(cacheKey, 3600, JSON.stringify(products));
+       try {
+            await redisClient.setEx(cacheKey, 3600, JSON.stringify(products));
+        } catch (redisError) {
+            console.error("Failed to set Redis cache:", redisError.message);
+        }
 
         res.json(products);
     }catch(error){

@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-"scripts": {
-  "postinstall": "prisma generate",
-  "build": "prisma generate",
-  "start": "node index.js"
-},
+  "scripts": {
+    "postinstall": "prisma generate",
+    "build": "prisma generate",
+    "start": "node index.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -19,7 +19,8 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "multer": "^2.2.0"
+    "multer": "^2.2.0",
+    "redis": "^6.2.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14",

@@ -10,6 +10,9 @@ const authRoutes = require('./routers/authRouter');
 const orderRoute = require("./routers/orderRouter")
 const cartRouter = require("./routers/cartRouter")
 
+const redisClient = require('./redisClient');
+
+
 dotenv.config();
 const app = express();
 app.use(cors());
